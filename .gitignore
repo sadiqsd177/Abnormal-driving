@@ -27,3 +27,10 @@ Thumbs.db
 
 # Model files (optional - uncomment if not tracking)
 # *.h5
+# Ignore large model files
+*.h5
+*.mp4
+*.avi
+*.zip
+*.tar
+*.pkl
