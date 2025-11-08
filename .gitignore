@@ -1,0 +1,29 @@
+# Virtual Environment
+myenv/
+abnormal_env/
+venv/
+env/
+
+# Temporary uploads
+temp_uploads/
+uploads/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (optional - uncomment if not tracking)
+# *.h5

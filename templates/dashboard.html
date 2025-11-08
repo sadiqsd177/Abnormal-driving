@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Video based Driving Behavior Analysis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .header h1 i {
+            color: #e74c3c;
+            margin-right: 15px;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-area {
+            border: 3px dashed #3498db;
+            border-radius: 15px;
+            padding: 40px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .upload-area:hover {
+            border-color: #e74c3c;
+            background: #fff;
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-header {
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+        }
+
+        .video-title {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .video-time {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        video {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .analysis-panel {
+            padding: 20px;
+        }
+
+        .behaviors-section {
+            margin-bottom: 15px;
+        }
+
+        .behavior-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin: 3px;
+        }
+
+        .normaldriving {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .mobilephone {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .radiodistraction {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .aggressivedriving {
+            background: #f5c6cb;
+            color: #721c24;
+        }
+
+        .drowsydriving {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .distracteddriving {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .eatingdrinking {
+            background: #fab1a0;
+            color: #e17055;
+        }
+
+        .drivernotvisible {
+            background: #dfe6e9;
+            color: #2d3436;
+        }
+
+        .analysiserror {
+            background: #ff7675;
+            color: #d63031;
+        }
+
+        .warnings-section {
+            margin: 15px 0;
+        }
+
+        .warning-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-left: 4px solid;
+        }
+
+        .severity-critical {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .severity-high {
+            background: #f5c6cb;
+            border-color: #fd7e14;
+            color: #721c24;
+        }
+
+        .severity-medium {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+
+        .severity-low {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .warning-text {
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .risk-level {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .risk-low {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .risk-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .risk-high {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .risk-critical {
+            background: #f5c6cb;
+            color: #721c24;
+        }
+
+        .confidence-bar {
+            background: #ecf0f1;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60);
+            transition: width 0.3s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .empty-state i {
+            font-size: 4em;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>video based Abnormal Driving Behavior </h1>
+        </div>
+    </div>
+
+    <div class="container">
+
+
+        <div class="upload-section">
+            <div class="upload-area">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Upload Driving Video for Analysis</h3>
+                <p style="margin: 15px 0; color: #7f8c8d;"> Videos only (MP4, AVI, MOV, MKV)
+                </p>
+                <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
+                    <input type="file" name="file" accept=".mp4,.avi,.mov,.mkv" required style="margin: 20px 0;"
+                        id="fileInput">
+                    <br>
+                    <button type="submit" class="btn" id="analyzeBtn">
+                        <i class="fas fa-upload"></i> Analyze File
+                    </button>
+                    <div id="loading" style="display: none; margin-top: 20px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 2em; color: #3498db;"></i>
+                        <p style="margin-top: 10px; color: #7f8c8d;">Analyzing... Please wait</p>
+                    </div>
+                </form>
+                <script>
+                    document.getElementById('uploadForm').onsubmit = function () {
+                        document.getElementById('analyzeBtn').disabled = true;
+                        document.getElementById('loading').style.display = 'block';
+                    };
+                </script>
+            </div>
+        </div>
+
+        {% if videos %}
+        <div class="videos-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; margin: 30px 0;">
+            {% for video in videos %}
+            <div class="video-card">
+                <div class="video-header">
+                    <div class="video-title">
+                        <i class="fas fa-video"></i> {{ video.filename }}
+                    </div>
+                    <div class="video-time">Analyzed: {{ video.analysis.analyzed_at }}</div>
+                </div>
+
+                <video controls style="width: 100%; height: 250px; background: #000;">
+                    <source src="{{ url_for('serve_video', filename=video.filename) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <div class="analysis-panel">
+                    <div class="behaviors-section">
+                        {% for behavior in video.analysis.behaviors %}
+                        <div
+                            class="behavior-tag {{ behavior.lower().replace(' ', '').replace('usage', '').replace('/', '') }}">
+                            <i class="fas fa-exclamation-triangle"></i> {{ behavior }}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="warnings-section">
+                        {% for warning in video.analysis.warnings %}
+                        <div class="warning-message severity-{{ warning.severity.lower() }}">
+                            <div class="warning-text">{{ warning.message }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="risk-indicator">
+                        <span class="risk-level risk-{{ video.analysis.risk_level.lower() }}">
+                            {{ video.analysis.risk_level }} Risk
+                        </span>
+                        <span style="font-size: 0.9em; color: #7f8c8d;">
+                            {{ video.analysis.confidence }}% Confidence
+                        </span>
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: {{ video.analysis.confidence }}%"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if result %}
+        <div style="max-width: 800px; margin: 30px auto;">
+            <div class="video-card">
+                <div class="video-header">
+                    <div class="video-title">
+                        <i class="fas fa-video"></i> {{ result.filename }}
+                    </div>
+                    <div class="video-time">Analyzed: {{ result.analyzed_at }}</div>
+                </div>
+
+                <video controls style="width: 100%; height: 300px; background: #000;">
+                    <source src="{{ url_for('serve_temp', filename=result.filename) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <div class="analysis-panel">
+                    <div class="behaviors-section">
+                        {% for behavior in result.behaviors %}
+                        <div
+                            class="behavior-tag {{ behavior.lower().replace(' ', '').replace('usage', '').replace('/', '') }}">
+                            <i class="fas fa-exclamation-triangle"></i> {{ behavior }}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="warnings-section">
+                        {% for warning in result.warnings %}
+                        <div class="warning-message severity-{{ warning.severity.lower() }}">
+                            <div class="warning-text">{{ warning.message }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="risk-indicator">
+                        <span class="risk-level risk-{{ result.risk_level.lower() }}">
+                            {{ result.risk_level }} Risk
+                        </span>
+                        <span style="font-size: 0.9em; color: #7f8c8d;">
+                            {{ result.confidence }}% Confidence
+                        </span>
+                    </div>
+
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: {{ result.confidence }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
