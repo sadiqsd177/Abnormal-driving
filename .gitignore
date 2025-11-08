@@ -34,3 +34,33 @@ Thumbs.db
 *.zip
 *.tar
 *.pkl
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data / Models
+*.h5
+*.hdf5
+*.pkl
+*.csv
+*.mp4
+*.avi
+*.zip
+*.tar
+*.gz
+
+# Logs and cache
+*.log
+logs/
+cache/
+*.DS_Store
